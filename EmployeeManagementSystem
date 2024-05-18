@@ -1,0 +1,163 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inventory_Management_System
+{
+    public class Item
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+
+        public Item(int id, string name, decimal price, int quantity)
+        {
+            ID = id;
+            Name = name;
+            Price = price;
+            Quantity = quantity;
+        }
+
+        public override string ToString()
+        {
+            return $"ID: {ID}, Name: {Name}, Price: {Price}, Quantity: {Quantity}";
+        }
+    }
+
+    public class Inventory
+    {
+        private List<Item> items;
+
+        public Inventory()
+        {
+            items = new List<Item>();
+        }
+
+        public void AddItem(Item item)
+        {
+            items.Add(item);
+        }
+
+        public void DisplayItems()
+        {
+            foreach (var item in items)
+            {
+                Console.WriteLine(item.ToString());
+            }
+        }
+
+        public Item FindItemById(int id)
+        {
+            return items.Find(i => i.ID == id);
+        }
+
+        public void UpdateItem(int id, string name, decimal price, int quantity)
+        {
+            var item = FindItemById(id);
+            if (item != null)
+            {
+                item.Name = name;
+                item.Price = price;
+                item.Quantity = quantity;
+            }
+            else
+            {
+                Console.WriteLine("Item not found.");
+            }
+        }
+
+        public void DeleteItem(int id)
+        {
+            var item = FindItemById(id);
+            if (item != null)
+            {
+                items.Remove(item);
+            }
+            else
+            {
+                Console.WriteLine("Item not found.");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var inventory = new Inventory();
+
+            while (true)
+            {
+                Console.WriteLine("1. Add item");
+                Console.WriteLine("2. Display items");
+                Console.WriteLine("3. Find item by ID");
+                Console.WriteLine("4. Update item");
+                Console.WriteLine("5. Delete item");
+                Console.WriteLine("6. Exit");
+
+                Console.Write("Choose an option: ");
+                int option = Convert.ToInt32(Console.ReadLine());
+
+                switch (option)
+                {
+                    case 1:
+                        Console.Write("Enter item ID: ");
+                        int id = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter item name: ");
+                        string name = Console.ReadLine();
+                        Console.Write("Enter item price: ");
+                        decimal price = Convert.ToDecimal(Console.ReadLine());
+                        Console.Write("Enter item quantity: ");
+                        int quantity = Convert.ToInt32(Console.ReadLine());
+
+                        var item = new Item(id, name, price, quantity);
+                        inventory.AddItem(item);
+                        break;
+                    case 2:
+                        inventory.DisplayItems();
+                        break;
+                    case 3:
+                        Console.Write("Enter item ID: ");
+                        int findId = Convert.ToInt32(Console.ReadLine());
+                        var foundItem = inventory.FindItemById(findId);
+                        if (foundItem != null)
+                        {
+                            Console.WriteLine(foundItem.ToString());
+                        }
+                        else
+                        {
+                            Console.WriteLine("Item not found.");
+                        }
+                        break;
+                    case 4:
+                        Console.Write("Enter item ID: ");
+                        int updateId = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter new item name: ");
+                        string updateName = Console.ReadLine();
+                        Console.Write("Enter new item price: ");
+                        decimal updatePrice = Convert.ToDecimal(Console.ReadLine());
+                        Console.Write("Enter new item quantity: ");
+                        int updateQuantity = Convert.ToInt32(Console.ReadLine());
+
+                        inventory.UpdateItem(updateId, updateName, updatePrice, updateQuantity);
+                        break;
+                    case 5:
+                        Console.Write("Enter item ID: ");
+                        int deleteId = Convert.ToInt32(Console.ReadLine());
+                        inventory.DeleteItem(deleteId);
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option. Please choose a valid option.");
+                        break;
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
